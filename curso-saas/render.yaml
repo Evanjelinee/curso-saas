@@ -1,0 +1,29 @@
+# Blueprint для Render: создаёт сайт и базу PostgreSQL.
+databases:
+  - name: curso-saas-db
+    databaseName: curso_saas
+    user: curso_saas
+    plan: free
+
+services:
+  - type: web
+    name: curso-saas
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # Сначала обновляем таблицы в базе, потом запускаем сайт.
+    startCommand: flask db upgrade && gunicorn wsgi:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: FLASK_APP
+        value: wsgi.py
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: curso-saas-db
+          property: connectionString

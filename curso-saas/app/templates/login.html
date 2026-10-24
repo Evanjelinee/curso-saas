@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<section class="card card-narrow">
+  <h1>Вход</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.email, autocomplete="email") }}
+    {{ field(form.password, autocomplete="current-password") }}
+    <label class="checkbox">{{ form.remember() }} {{ form.remember.label.text }}</label>
+    <button class="btn btn-block" type="submit">{{ form.submit.label.text }}</button>
+  </form>
+  <p class="muted">Нет аккаунта? <a href="{{ url_for('auth.register') }}">Зарегистрироваться</a></p>
+</section>
+{% endblock %}

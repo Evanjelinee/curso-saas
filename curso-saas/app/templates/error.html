@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Ошибка {{ code }}{% endblock %}
+{% block content %}
+<section class="card card-narrow center">
+  <h1>{{ title }}</h1>
+  <p class="muted">{{ message }}</p>
+  <p><a class="btn" href="{{ url_for('main.index') }}">На главную</a></p>
+</section>
+{% endblock %}

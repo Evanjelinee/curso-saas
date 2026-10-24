@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Автоматизации{% endblock %}
+{% block content %}
+<div class="row row-between">
+  <h1>Автоматизации</h1>
+  <a class="btn" href="{{ url_for('main.automation_new') }}">Создать</a>
+</div>
+
+{% if not automations %}
+  <div class="card"><p class="muted">Пока нет ни одной автоматизации. Создайте первую.</p></div>
+{% else %}
+  <ul class="list">
+    {% for a in automations %}
+      <li class="card">
+        <div class="row row-between">
+          <div>
+            <strong>Слово: «{{ a.keyword }}»</strong>
+            {% if a.is_active %}<span class="badge badge-on">Включена</span>
+            {% else %}<span class="badge badge-off">Выключена</span>{% endif %}
+          </div>
+        </div>
+        <p class="pre"><span class="muted">Direct:</span> {{ a.direct_message }}</p>
+        {% if a.public_reply %}<p class="pre"><span class="muted">Ответ в комментарии:</span> {{ a.public_reply }}</p>{% endif %}
+        <p class="muted">Аккаунт: {% if a.instagram_account %}@{{ a.instagram_account.username }}{% else %}все{% endif %}</p>
+        <div class="actions">
+          <a class="btn btn-small btn-ghost" href="{{ url_for('main.automation_edit', automation_id=a.id) }}">Изменить</a>
+          <form method="post" action="{{ url_for('main.automation_toggle', automation_id=a.id) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-small btn-ghost" type="submit">{{ "Выключить" if a.is_active else "Включить" }}</button>
+          </form>
+          <form method="post" action="{{ url_for('main.automation_delete', automation_id=a.id) }}" class="inline-form"
+                onsubmit="return confirm('Удалить автоматизацию?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-small btn-danger" type="submit">Удалить</button>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

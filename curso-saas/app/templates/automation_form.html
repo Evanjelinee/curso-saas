@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="card card-narrow">
+  <h1>{{ title }}</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.instagram_account_id) }}
+    {{ field(form.keyword, placeholder="Например: Курс") }}
+    {{ field(form.direct_message, rows=5) }}
+    {{ field(form.public_reply, placeholder="Например: Отправили вам в Direct!") }}
+    <label class="checkbox">{{ form.is_active() }} {{ form.is_active.label.text }}</label>
+    <div class="actions">
+      <button class="btn" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('main.automations') }}">Отмена</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

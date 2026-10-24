@@ -1,0 +1,3 @@
+Папка миграций базы данных (Flask-Migrate / Alembic).
+Применить миграции:  flask db upgrade
+После изменения моделей:  flask db migrate -m "что изменили"  и затем  flask db upgrade

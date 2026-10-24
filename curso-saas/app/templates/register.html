@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<section class="card card-narrow">
+  <h1>Регистрация</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.email, autocomplete="email") }}
+    {{ field(form.password, autocomplete="new-password") }}
+    {{ field(form.confirm, autocomplete="new-password") }}
+    <button class="btn btn-block" type="submit">{{ form.submit.label.text }}</button>
+  </form>
+  <p class="muted">Уже есть аккаунт? <a href="{{ url_for('auth.login') }}">Войти</a></p>
+</section>
+{% endblock %}
