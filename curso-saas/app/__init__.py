@@ -1,11 +1,8 @@
 """Фабрика приложения Flask."""
 import os
-
 from flask import Flask, render_template
-
 from .config import IS_PRODUCTION, Config
 from .extensions import csrf, db, login_manager, migrate
-
 
 def create_app(config_object=None) -> Flask:
     app = Flask(__name__)
@@ -16,7 +13,6 @@ def create_app(config_object=None) -> Flask:
     if not app.config.get("SECRET_KEY"):
         if IS_PRODUCTION:
             raise RuntimeError("Не задана переменная окружения SECRET_KEY.")
-        # Для локальной разработки: случайный ключ (после перезапуска придётся войти заново).
         app.config["SECRET_KEY"] = os.urandom(32).hex()
 
     db.init_app(app)
@@ -24,7 +20,7 @@ def create_app(config_object=None) -> Flask:
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    from . import models  # noqa: F401  (чтобы таблицы были известны миграциям)
+    from . import models  # noqa: F401
     from .auth import bp as auth_bp
     from .main import bp as main_bp
 
@@ -33,6 +29,7 @@ def create_app(config_object=None) -> Flask:
 
     _register_error_handlers(app)
     _register_security_headers(app)
+
     return app
 
 
@@ -42,8 +39,7 @@ def _register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(400)
     def bad_request(_error):
-        return show(400, "Не удалось обработать запрос",
-                    "Обновите страницу и попробуйте ещё раз. Возможно, форма устарела.")
+        return show(400, "Не удалось обработать запрос", "Обновите страницу и попробуйте ещё раз.")
 
     @app.errorhandler(403)
     def forbidden(_error):
