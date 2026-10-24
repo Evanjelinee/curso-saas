@@ -4,21 +4,36 @@
 <h1>Instagram-аккаунты</h1>
 
 <div class="card">
-  <p><span class="badge badge-off">Пока не подключено</span></p>
-  <p class="muted">Подключение Instagram через официальный вход Meta появится на следующем этапе.
-     Вводить токены вручную не нужно и не понадобится.</p>
-  <button class="btn" type="button" disabled>Подключить Instagram (скоро)</button>
+  <h2>Подключить Instagram</h2>
+  <p>Подключите профессиональный Instagram-аккаунт через официальный вход Meta.</p>
+  <p class="muted">Вводить токены вручную не нужно. Пароль Instagram мы не запрашиваем.</p>
+  <a href="{{ url_for('main.accounts_connect') }}" class="btn">Подключить Instagram</a>
 </div>
 
 {% if accounts %}
   <h2>Ваши аккаунты</h2>
-  <ul class="list">
+  <div class="list">
     {% for account in accounts %}
-      <li class="card row">
-        <strong>@{{ account.username }}</strong>
-        <span class="badge badge-off">{{ status_labels.get(account.status, "Пока не подключено") }}</span>
-      </li>
+      <div class="card">
+        <div class="row row-between">
+          <div>
+            <strong>@{{ account.username }}</strong>
+            <span class="badge {% if account.status == 'connected' %}badge-on{% else %}badge-off{% endif %}">
+              {{ status_labels.get(account.status, "Пока не подключено") }}
+            </span>
+          </div>
+          <form method="post" action="{{ url_for('main.accounts_disconnect', account_id=account.id) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-small btn-danger">Отключить</button>
+          </form>
+        </div>
+        {% if account.token_expires_at %}
+          <p class="muted" style="margin-top:8px;font-size:.9rem;">
+            Токен действителен до: {{ account.token_expires_at.strftime('%d.%m.%Y %H:%M UTC') }}
+          </p>
+        {% endif %}
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 {% endif %}
 {% endblock %}
